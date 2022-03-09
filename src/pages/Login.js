@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createUser } from '../services/userAPI';
+import Isload from '../components/Isload';
 
 class Login extends React.Component {
   constructor() {
@@ -51,7 +52,7 @@ class Login extends React.Component {
   render() {
     const { loginName, isDisabled, isLoad } = this.state;
     if (isLoad) {
-      return <span>Carregando...</span>;
+      return <Isload />;
     }
     return (
       <div data-testid="page-login">
