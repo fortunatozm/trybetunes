@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes, { shape } from 'prop-types';
+import PropTypes from 'prop-types';
 import { createUser } from '../services/userAPI';
 
 class Login extends React.Component {
