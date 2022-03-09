@@ -8,6 +8,7 @@ class Header extends React.Component {
     super();
     this.state = {
       isLoad: false,
+      nome: '',
     };
 
     this.getName = this.getName.bind(this);
@@ -21,24 +22,23 @@ class Header extends React.Component {
     this.setState({
       isLoad: true,
     }, async () => {
-      // await getUser();
       const { name } = await getUser();
-      console.log(name);
       this.setState({
         isLoad: false,
+        nome: name,
       });
     });
   }
 
   render() {
-    const { isLoad } = this.state;
+    const { isLoad, nome } = this.state;
     if (isLoad) {
       return <Isload />;
     }
     return (
       <header data-testid="header-component">
         <h4 data-testid="header-user-name">
-          {this.getName}
+          {nome}
         </h4>
         <Link to="/search" data-testid="link-to-search">Search</Link>
         <Link to="/favorites" data-testid="link-to-favorites">Favorites</Link>
