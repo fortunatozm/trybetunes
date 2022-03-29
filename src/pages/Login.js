@@ -46,7 +46,6 @@ class Login extends React.Component {
     });
     const { history } = this.props;
     history.push('/search');
-    console.log('Aqui');
   }
 
   render() {
