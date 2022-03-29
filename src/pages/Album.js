@@ -30,12 +30,7 @@ class Album extends React.Component {
   }
 
   render() {
-    const { match: { params: { id } } } = this.props;
     const { mMusicas, mMusicas2 } = this.state;
-    // const musicSP = mMusicas.shift();
-    console.log(this.props);
-    console.log(id);
-    console.log(mMusicas);
     return (
       <div data-testid="page-album">
         <Header />
@@ -53,7 +48,6 @@ class Album extends React.Component {
           { mMusicas.map((mMusica) => (
             <MusicCard
               key={ mMusica.trackNumber }
-              // mMusica={ mMusica.wrapperType === 'track' }
               mMusica={ mMusica }
             />
           ))}

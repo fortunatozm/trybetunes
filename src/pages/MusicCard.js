@@ -1,18 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { addSong } from '../services/favoriteSongsAPI';
+import Isload from '../components/Isload';
 
 class MusicCard extends React.Component {
   constructor() {
     super();
 
     this.state = {
-
+      albumCheck: false,
+      carregando: false,
     };
+    this.clickCheck = this.clickCheck.bind(this);
+  }
+
+  async clickCheck() {
+    const { albumCheck } = this.state;
+    if (albumCheck) {
+      this.setState({
+        albumCheck: false,
+      });
+    } else {
+      this.setState({
+        albumCheck: true,
+        carregando: true,
+      });
+      const { mMusica } = this.props;
+      await addSong(mMusica);
+      this.setState({
+        carregando: false,
+      });
+    }
   }
 
   render() {
     const { mMusica } = this.props;
-    console.log(mMusica);
+    const { albumCheck, carregando } = this.state;
     return (
       <>
         <span>
@@ -27,9 +50,12 @@ class MusicCard extends React.Component {
           Favorita
           <input
             type="checkbox"
+            checked={ albumCheck }
+            onClick={ this.clickCheck }
             id="favorita"
             data-testid={ `checkbox-music-${mMusica.trackId}` }
           />
+          {carregando ? <Isload /> : undefined}
         </label>
         <br />
       </>
@@ -38,7 +64,8 @@ class MusicCard extends React.Component {
 }
 
 MusicCard.propTypes = {
-  mMusica: PropTypes.shape.isRequired,
+  mMusica: PropTypes.shape().isRequired,
+  // albumCheck: PropTypes.bool.isRequired,
 };
 
 export default MusicCard;
