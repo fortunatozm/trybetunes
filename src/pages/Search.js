@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import Isload from '../components/Isload';
@@ -20,19 +20,19 @@ class Search extends React.Component {
     this.hendleClickS = this.hendleClickS.bind(this);
   }
 
-  async hendleClickS(e) {
-    e.preventDefault();
+  hendleClickS() {
     const { nomeArt } = this.state;
     const secN = 'Nenhum álbum foi encontrado';
     this.setState({
-      isLoad: true });
-    const data = await searchAlbumsAPI(nomeArt);
-    this.setState({
-      nomeArt: '',
-      isLoad: false,
-      musicAr: data,
-      titleName: `Resultado de álbuns de: ${nomeArt}`,
-      secNegative: secN,
+      isLoad: true }, async () => {
+      const data = await searchAlbumsAPI(nomeArt);
+      this.setState({
+        nomeArt: '',
+        isLoad: false,
+        musicAr: data,
+        titleName: `Resultado de álbuns de: ${nomeArt}`,
+        secNegative: secN,
+      });
     });
     // console.log(this.state.nomeArt);
     // history.push('/album/:id');
@@ -71,7 +71,7 @@ class Search extends React.Component {
           <div>
             <h2>{ titleName }</h2>
             { musicAr.length < 1 ? secNegative : (musicAr.map((musica) => (
-              <div key={ musica.artistId }>
+              <div key={ Math.random() }>
                 <img src={ musica.artworkUrl100 } alt={ musica.collectionName } />
                 <p>
                   { musica.collectionName }
@@ -92,22 +92,22 @@ class Search extends React.Component {
   }
 }
 
-Search.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  musicAr: PropTypes.arrayOf(
-    PropTypes.shape({
-      artistId: PropTypes.number.isRequired,
-      artistName: PropTypes.string.isRequired,
-      collectionId: PropTypes.number.isRequired,
-      collectionName: PropTypes.string.isRequired,
-      collectionPrice: PropTypes.number.isRequired,
-      artworkUrl100: PropTypes.string.isRequired,
-      releaseDate: PropTypes.string.isRequired,
-      trackCount: PropTypes.number.isRequired,
-    }).isRequired,
-  ).isRequired,
-};
+// Search.propTypes = {
+//   history: PropTypes.shape({
+//     push: PropTypes.func.isRequired,
+//   }).isRequired,
+//   musicAr: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       artistId: PropTypes.number.isRequired,
+//       artistName: PropTypes.string.isRequired,
+//       collectionId: PropTypes.number.isRequired,
+//       collectionName: PropTypes.string.isRequired,
+//       collectionPrice: PropTypes.number.isRequired,
+//       artworkUrl100: PropTypes.string.isRequired,
+//       releaseDate: PropTypes.string.isRequired,
+//       trackCount: PropTypes.number.isRequired,
+//     }).isRequired,
+//   ).isRequired,
+// };
 
 export default Search;
