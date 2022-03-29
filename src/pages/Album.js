@@ -2,32 +2,63 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
+import MusicCard from './MusicCard';
 
 class Album extends React.Component {
   constructor() {
     super();
     this.state = {
-
+      mMusicas: [],
+      mMusicas2: [],
     };
     this.recebeMusic = this.recebeMusic.bind(this);
+  }
+
+  componentDidMount() {
+    this.recebeMusic();
   }
 
   async recebeMusic() {
     const { match: { params: { id } } } = this.props;
     const musicas = await getMusics(id);
-    return musicas;
+    const copyMusic = [...musicas];
+    const pElement = copyMusic.shift();
+    this.setState({
+      mMusicas: copyMusic,
+      mMusicas2: pElement,
+    });
   }
 
   render() {
+    const { match: { params: { id } } } = this.props;
+    const { mMusicas, mMusicas2 } = this.state;
+    // const musicSP = mMusicas.shift();
+    console.log(this.props);
+    console.log(id);
+    console.log(mMusicas);
     return (
       <div data-testid="page-album">
         <Header />
-        {/* <section>
-          { this.recebeMusic() }
-        </section> */}
-        {/* { console.log(...this.recebeMusic()) } */}
-      </div>
-    );
+        <section>
+          { mMusicas.length > 0 ? (
+            <>
+              <h2 data-testid="album-name">
+                { mMusicas2.collectionName }
+              </h2>
+              <span data-testid="artist-name">
+                { mMusicas2.artistName }
+              </span>
+            </>) : undefined }
+
+          { mMusicas.map((mMusica) => (
+            <MusicCard
+              key={ mMusica.trackNumber }
+              // mMusica={ mMusica.wrapperType === 'track' }
+              mMusica={ mMusica }
+            />
+          ))}
+        </section>
+      </div>);
   }
 }
 

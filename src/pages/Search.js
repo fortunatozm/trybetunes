@@ -34,8 +34,6 @@ class Search extends React.Component {
         secNegative: secN,
       });
     });
-    // console.log(this.state.nomeArt);
-    // history.push('/album/:id');
   }
 
   hendleChangeS(prevName) {
@@ -58,7 +56,7 @@ class Search extends React.Component {
 
   render() {
     const { nomeArt, isDisable, isLoad, musicAr, titleName, secNegative } = this.state;
-
+    console.log(this.props);
     return (
       <div data-testid="page-search">
         <Input
