@@ -5,7 +5,7 @@ import Header from './Header';
 class Input extends React.Component {
   render() {
     const { nomeArt, hendleChangeS, hendleClickS, isDisable } = this.props;
-    console.log(isDisable);
+    // console.log(isDisable);
     return (
       <>
         <Header />

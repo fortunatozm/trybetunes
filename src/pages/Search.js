@@ -56,7 +56,7 @@ class Search extends React.Component {
 
   render() {
     const { nomeArt, isDisable, isLoad, musicAr, titleName, secNegative } = this.state;
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div data-testid="page-search">
         <Input

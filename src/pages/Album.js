@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
+import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 import MusicCard from './MusicCard';
 
 class Album extends React.Component {
@@ -10,6 +11,7 @@ class Album extends React.Component {
     this.state = {
       mMusicas: [],
       mMusicas2: [],
+      favoritadas: [],
     };
     this.recebeMusic = this.recebeMusic.bind(this);
   }
@@ -21,16 +23,19 @@ class Album extends React.Component {
   async recebeMusic() {
     const { match: { params: { id } } } = this.props;
     const musicas = await getMusics(id);
+    const favoritas = await getFavoriteSongs();
+    const nweFavorite = favoritas.map((favorita) => favorita.trackName);
     const copyMusic = [...musicas];
     const pElement = copyMusic.shift();
     this.setState({
       mMusicas: copyMusic,
       mMusicas2: pElement,
+      favoritadas: nweFavorite,
     });
   }
 
   render() {
-    const { mMusicas, mMusicas2 } = this.state;
+    const { mMusicas, mMusicas2, favoritadas } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
@@ -49,6 +54,7 @@ class Album extends React.Component {
             <MusicCard
               key={ mMusica.trackNumber }
               mMusica={ mMusica }
+              favoritadas={ favoritadas }
             />
           ))}
         </section>
