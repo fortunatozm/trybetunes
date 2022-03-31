@@ -63,7 +63,6 @@ class MusicCard extends React.Component {
 }
 
 MusicCard.propTypes = {
-  // albumCheck: PropTypes.bool.isRequired,
   mMusica: PropTypes.shape().isRequired,
   favoritadas: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
