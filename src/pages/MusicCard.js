@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Isload from '../components/Isload';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, removeSong } from '../services/favoriteSongsAPI';
 
 class MusicCard extends React.Component {
   constructor() {
@@ -13,19 +13,26 @@ class MusicCard extends React.Component {
     this.clickCheck = this.clickCheck.bind(this);
   }
 
-  async clickCheck() {
-    const { albumCheck } = this.state;
-    if (albumCheck) {
+  async clickCheck({ target }) {
+    const { mMusica, pegarFavorito } = this.props;
+    const valor = target.checked;
+    if (!valor) {
+      this.setState({
+        carregando: true,
+      });
+      await removeSong(mMusica);
+      await pegarFavorito();
       this.setState({
         albumCheck: false,
+        carregando: false,
       });
     } else {
       this.setState({
         albumCheck: true,
         carregando: true,
       });
-      const { mMusica } = this.props;
       await addSong(mMusica);
+      await pegarFavorito();
       this.setState({
         carregando: false,
       });
@@ -35,6 +42,11 @@ class MusicCard extends React.Component {
   render() {
     const { mMusica, favoritadas } = this.props;
     const { albumCheck, carregando } = this.state;
+    console.log(favoritadas);
+    console.log(mMusica);
+    if (!favoritadas) {
+      return <span>Não tem música favorita</span>;
+    }
     return (
       <>
         <span>
@@ -65,6 +77,7 @@ class MusicCard extends React.Component {
 MusicCard.propTypes = {
   mMusica: PropTypes.shape().isRequired,
   favoritadas: PropTypes.arrayOf(PropTypes.object).isRequired,
+  pegarFavorito: PropTypes.func.isRequired,
 };
 
 export default MusicCard;

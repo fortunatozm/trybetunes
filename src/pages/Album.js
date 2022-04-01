@@ -14,23 +14,34 @@ class Album extends React.Component {
       favoritadas: [],
     };
     this.recebeMusic = this.recebeMusic.bind(this);
+    this.pegarFavorito = this.pegarFavorito.bind(this);
   }
 
   componentDidMount() {
     this.recebeMusic();
   }
 
+  // componentDidUpdate() {
+  //   this.pegarFavorito();
+  // }
+
+  async pegarFavorito() {
+    const favoritas = await getFavoriteSongs();
+    const nweFavorite = favoritas.map((favorita) => favorita.trackName);
+    this.setState({
+      favoritadas: nweFavorite,
+    });
+  }
+
   async recebeMusic() {
     const { match: { params: { id } } } = this.props;
     const musicas = await getMusics(id);
-    const favoritas = await getFavoriteSongs();
-    const nweFavorite = favoritas.map((favorita) => favorita.trackName);
     const copyMusic = [...musicas];
     const pElement = copyMusic.shift();
+    await this.pegarFavorito();
     this.setState({
       mMusicas: copyMusic,
       mMusicas2: pElement,
-      favoritadas: nweFavorite,
     });
   }
 
@@ -52,9 +63,10 @@ class Album extends React.Component {
 
           { mMusicas.map((mMusica) => (
             <MusicCard
-              key={ mMusica.trackNumber }
+              key={ mMusica.trackId }
               mMusica={ mMusica }
               favoritadas={ favoritadas }
+              pegarFavorito={ this.pegarFavorito }
             />
           ))}
         </section>

@@ -1,16 +1,21 @@
 import React from 'react';
 import Header from '../components/Header';
-import { getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
+import MusicCard from './MusicCard';
 import Isload from '../components/Isload';
 
 class Favorites extends React.Component {
   constructor() {
     super();
     this.state = {
-      mFavorit: [],
+      mFavorites: [],
+      nameFavorites: [],
       isload: false,
+      // checked: true,
     };
     this.getFavorite = this.getFavorite.bind(this);
+    this.removeFavorito = this.removeFavorito.bind(this);
+    // this.clickRemove = this.clickRemove.bind(this);
   }
 
   componentDidMount() {
@@ -22,21 +27,55 @@ class Favorites extends React.Component {
       isload: true,
     }, async () => {
       const favoritas = await getFavoriteSongs();
-      this.setState({
-        mFavorit: favoritas,
-        isload: false,
-      });
+      if (!favoritas) {
+        this.setState({
+          mFavorites: [],
+          nameFavorites: [],
+          isload: false,
+        });
+      } else {
+        const favoriteNames = favoritas.map((favoriteName) => favoriteName.trackName);
+        this.setState({
+          mFavorites: favoritas,
+          nameFavorites: favoriteNames,
+          isload: false,
+        });
+      }
+    });
+  }
+
+  async removeFavorito() {
+    const favoritas = await getFavoriteSongs();
+    const newFavorite = favoritas.map((favorita) => favorita.trackName);
+    this.setState({
+      mFavorites: favoritas,
+      nameFavorites: newFavorite,
     });
   }
 
   render() {
-    const { mFavorit, isload } = this.state;
+    const { mFavorites, nameFavorites, isload } = this.state;
+    // console.log('mFavorites', mFavorites);
     if (isload) {
       return <Isload />;
     }
     return (
       <div data-testid="page-favorites">
         <Header />
+        { mFavorites === undefined ? undefined : (
+          mFavorites.map((mFavorit) => (
+            <MusicCard
+              key={ mFavorit.trackId }
+              mMusica={ mFavorit }
+              favoritadas={ nameFavorites }
+              pegarFavorito={ this.removeFavorito }
+            />
+          ))) }
+        {/* <MusicCard
+          key={ mFavorit.trackId }
+          mMusica={ mFavorit }
+          favoritadas={  }
+        />
         { mFavorit.length < 1 ? undefined : mFavorit.map((fav) => (
           <>
             <span>
@@ -51,13 +90,14 @@ class Favorites extends React.Component {
               Favorita
               <input
                 type="checkbox"
-                checked="true"
+                checked={ checked }
                 id="favorita"
                 data-testid={ `checkbox-music-${fav.trackId}` }
+                onClick={ this.clickRemove }
               />
             </label>
             <br />
-          </>)) }
+          </>)) } */}
       </div>
     );
   }
