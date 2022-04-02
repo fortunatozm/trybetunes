@@ -35,6 +35,8 @@ Input.propTypes = {
   hendleClickS: PropTypes.func.isRequired,
   isDisable: PropTypes.bool.isRequired,
   nomeArt: PropTypes.string.isRequired,
+  isload: PropTypes.bool.isRequired,
+  data: PropTypes.shape().isRequired,
 };
 
 export default Input;
