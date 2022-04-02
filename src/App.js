@@ -13,7 +13,6 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          {/* <p>TrybeTunes</p> */}
           <Route
             path="/album/:id"
             render={ (props) => (<Album
@@ -29,7 +28,13 @@ class App extends React.Component {
             />) }
           />
           <Route path="/profile/edit" component={ ProfileEdit } />
-          <Route exact path="/profile" component={ Profile } />
+          <Route
+            exact
+            path="/profile"
+            render={ (props) => (<Profile
+              { ...props }
+            />) }
+          />
           <Route
             path="/search"
             render={ (props) => (<Search

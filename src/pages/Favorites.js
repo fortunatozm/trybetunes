@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 import MusicCard from './MusicCard';
 import Isload from '../components/Isload';
+import { getUser } from '../services/userAPI';
 
 class Favorites extends React.Component {
   constructor() {
@@ -11,15 +12,28 @@ class Favorites extends React.Component {
       mFavorites: [],
       nameFavorites: [],
       isload: false,
-      // checked: true,
+      isloadUser: false,
+      data: {},
     };
     this.getFavorite = this.getFavorite.bind(this);
     this.removeFavorito = this.removeFavorito.bind(this);
-    // this.clickRemove = this.clickRemove.bind(this);
+    this.getuser = this.getuser.bind(this);
   }
 
   componentDidMount() {
     this.getFavorite();
+    this.getuser();
+  }
+
+  async getuser() {
+    this.setState({
+      isloadUser: true,
+    });
+    const dados = await getUser();
+    this.setState({
+      isloadUser: false,
+      data: dados,
+    });
   }
 
   getFavorite() {
@@ -54,14 +68,16 @@ class Favorites extends React.Component {
   }
 
   render() {
-    const { mFavorites, nameFavorites, isload } = this.state;
-    // console.log('mFavorites', mFavorites);
+    const { mFavorites, nameFavorites, isload, isloadUser, data } = this.state;
     if (isload) {
       return <Isload />;
     }
     return (
       <div data-testid="page-favorites">
-        <Header />
+        <Header
+          isload={ isloadUser }
+          data={ data }
+        />
         { mFavorites === undefined ? undefined : (
           mFavorites.map((mFavorit) => (
             <MusicCard
@@ -71,33 +87,6 @@ class Favorites extends React.Component {
               pegarFavorito={ this.removeFavorito }
             />
           ))) }
-        {/* <MusicCard
-          key={ mFavorit.trackId }
-          mMusica={ mFavorit }
-          favoritadas={  }
-        />
-        { mFavorit.length < 1 ? undefined : mFavorit.map((fav) => (
-          <>
-            <span>
-              { fav.trackName }
-            </span>
-            <audio data-testid="audio-component" src={ fav.previewUrl } controls>
-              <track kind="captions" />
-              O seu navegador não suporta o elemento
-              <code>audio</code>
-            </audio>
-            <label htmlFor="favorita">
-              Favorita
-              <input
-                type="checkbox"
-                checked={ checked }
-                id="favorita"
-                data-testid={ `checkbox-music-${fav.trackId}` }
-                onClick={ this.clickRemove }
-              />
-            </label>
-            <br />
-          </>)) } */}
       </div>
     );
   }

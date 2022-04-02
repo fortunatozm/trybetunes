@@ -3,6 +3,7 @@ import React from 'react';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
 import { getFavoriteSongs } from '../services/favoriteSongsAPI';
+import { getUser } from '../services/userAPI';
 import MusicCard from './MusicCard';
 
 class Album extends React.Component {
@@ -12,18 +13,29 @@ class Album extends React.Component {
       mMusicas: [],
       mMusicas2: [],
       favoritadas: [],
+      isload: false,
+      data: {},
     };
     this.recebeMusic = this.recebeMusic.bind(this);
     this.pegarFavorito = this.pegarFavorito.bind(this);
+    this.getuser = this.getuser.bind(this);
   }
 
   componentDidMount() {
     this.recebeMusic();
+    this.getuser();
   }
 
-  // componentDidUpdate() {
-  //   this.pegarFavorito();
-  // }
+  async getuser() {
+    this.setState({
+      isload: true,
+    });
+    const dados = await getUser();
+    this.setState({
+      isload: false,
+      data: dados,
+    });
+  }
 
   async pegarFavorito() {
     const favoritas = await getFavoriteSongs();
@@ -46,10 +58,13 @@ class Album extends React.Component {
   }
 
   render() {
-    const { mMusicas, mMusicas2, favoritadas } = this.state;
+    const { mMusicas, mMusicas2, favoritadas, isload, data } = this.state;
     return (
       <div data-testid="page-album">
-        <Header />
+        <Header
+          isload={ isload }
+          data={ data }
+        />
         <section>
           { mMusicas.length > 0 ? (
             <>

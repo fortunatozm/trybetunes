@@ -1,9 +1,9 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import Isload from '../components/Isload';
 import Input from '../components/Input';
+import { getUser } from '../services/userAPI';
 
 class Search extends React.Component {
   constructor() {
@@ -15,9 +15,27 @@ class Search extends React.Component {
       titleName: '',
       musicAr: [],
       secNegative: '',
+      isload: false,
+      data: {},
     };
     this.hendleChangeS = this.hendleChangeS.bind(this);
     this.hendleClickS = this.hendleClickS.bind(this);
+    this.getuser = this.getuser.bind(this);
+  }
+
+  componentDidMount() {
+    this.getuser();
+  }
+
+  async getuser() {
+    this.setState({
+      isload: true,
+    });
+    const dados = await getUser();
+    this.setState({
+      isload: false,
+      data: dados,
+    });
   }
 
   hendleClickS() {
@@ -55,8 +73,8 @@ class Search extends React.Component {
   }
 
   render() {
-    const { nomeArt, isDisable, isLoad, musicAr, titleName, secNegative } = this.state;
-    // console.log(this.props);
+    const { nomeArt, isDisable, isLoad, musicAr,
+      titleName, secNegative, data, isload } = this.state;
     return (
       <div data-testid="page-search">
         <Input
@@ -64,6 +82,8 @@ class Search extends React.Component {
           hendleClickS={ this.hendleClickS }
           hendleChangeS={ this.hendleChangeS }
           nomeArt={ nomeArt }
+          data={ data }
+          isload={ isload }
         />
         { isLoad ? <Isload /> : (
           <div>
